@@ -83,9 +83,6 @@ images.forEach(({ preview, original, description }) => {
   img.src = preview;
   img.alt = description;
 
-  img.style.width = '360px';
-  img.style.height = '200px';
-
   link.appendChild(img);
   listItem.appendChild(link);
   galleryContainer.appendChild(listItem);

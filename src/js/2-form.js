@@ -12,26 +12,35 @@ function restoreDataFromLocalStorage() {
 const savedFormData = restoreDataFromLocalStorage();
 
 const formattedFormData = {
-  email: savedFormData.email || '',
-  message: savedFormData.message || '',
+  email: (savedFormData.email || '').trim(),
+  message: (savedFormData.message || '').trim(),
 };
 
 form.elements.email.value = formattedFormData.email;
 form.elements.message.value = formattedFormData.message;
 
-const handleInput = (event) => {
-  formattedFormData[event.target.name] = event.target.value.trim()
+const handleInput = event => {
+  formattedFormData[event.target.name] = event.target.value.trim();
 
   saveFormDataToLocalStorage(formattedFormData);
-}
+};
 
-const handleSubmit = (event) => {
+const handleSubmit = event => {
   event.preventDefault();
-  console.log(formattedFormData, 'before condition')
-  const areTextFieldsFilled = Object.values(formattedFormData).every(value => value !== '');
+  let isEmptyField = false;
 
-  if(!areTextFieldsFilled){
-    alert('All form fields must be filled in');
+  for (const key in formattedFormData) {
+    if (
+      formattedFormData.hasOwnProperty(key) &&
+      formattedFormData[key] === ''
+    ) {
+      isEmptyField = true;
+      break;
+    }
+  }
+
+  if (isEmptyField) {
+    alert('Please fill in all fields');
     return;
   }
 
@@ -42,7 +51,10 @@ const handleSubmit = (event) => {
 
   localStorage.removeItem(localStorageKey);
   form.reset();
-}
+
+  formattedFormData.email = '';
+  formattedFormData.message = '';
+};
 
 form.addEventListener('input', handleInput);
 form.addEventListener('submit', handleSubmit);
